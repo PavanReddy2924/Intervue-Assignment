@@ -1,0 +1,22 @@
+services:
+  # Backend: Node.js + Express + Socket.IO
+  - type: web
+    name: live-polling-backend
+    env: node
+    branch: main
+    rootDir: server
+    buildCommand: "npm install"
+    startCommand: "node server.js"
+    autoDeploy: true
+    region: oregon
+    plan: free
+
+  # Frontend: React + Vite (Static Site)
+  - type: static_site
+    name: live-polling-frontend
+    branch: main
+    buildCommand: "npm install && npm run build"
+    publishDir: "dist"
+    autoDeploy: true
+    region: oregon
+    plan: free
