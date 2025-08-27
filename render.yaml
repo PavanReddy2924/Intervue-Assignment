@@ -6,7 +6,7 @@ services:
     branch: main
     rootDir: Intervue-Assignment/server
     buildCommand: "npm install"
-    startCommand: "npm run server"   # correct if "server" script exists in package.json
+    startCommand: "npm run server"   # backend start script
     autoDeploy: true
     region: oregon
     plan: free
@@ -17,8 +17,7 @@ services:
     env: static
     branch: main
     rootDir: Intervue-Assignment
-    buildCommand: "npm install && npm run build"   # <-- build once
-    staticPublishPath: "dist"                      # <-- serve built files
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: "dist"
     autoDeploy: true
-    region: oregon
     plan: free
