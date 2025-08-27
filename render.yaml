@@ -9,7 +9,6 @@ services:
     startCommand: "npm run server"   # backend start script
     autoDeploy: true
     region: oregon
-    plan: free
 
   # Frontend: React + Vite (Static Site)
   - type: web
@@ -20,4 +19,3 @@ services:
     buildCommand: "npm install && npm run build"
     staticPublishPath: "dist"
     autoDeploy: true
-    plan: free
