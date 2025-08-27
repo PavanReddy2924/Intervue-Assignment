@@ -179,7 +179,7 @@ function App() {
                 <div>📊 Instant results</div>
                 <div>⏰ Time limits</div>
                 <div>👥 Student management</div>
-                {/* <div>📈 Past results</div> */}
+                <div>📈 Past results</div>
               </div>
             </div>
           </div>
