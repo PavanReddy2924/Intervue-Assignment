@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
-import { Plus, Users, Clock, Ban } from 'lucide-react';
+import { Plus, Users, Clock, BarChart3, Ban } from 'lucide-react';
 import PollResults from './PollResults';
 import ChatPopup from './ChatPopup';
 import SocketService from '../utils/socket';
 
 const TeacherDashboard: React.FC = () => {
   const dispatch = useDispatch();
-  const { currentPoll, students } = useSelector((state: RootState) => state.poll);
+  const { currentPoll, students, pollResults } = useSelector((state: RootState) => state.poll);
   const [showCreatePoll, setShowCreatePoll] = useState(false);
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '']);
   const [maxTime, setMaxTime] = useState(60);
-
+  const [showPastResults, setShowPastResults] = useState(false);
+  
   const socket = SocketService.getInstance().getSocket();
 
   useEffect(() => {
@@ -79,6 +80,13 @@ const TeacherDashboard: React.FC = () => {
               <Users className="w-5 h-5 text-blue-600" />
               <span className="font-medium">{students.length} Students Online</span>
             </div>
+            <button
+              onClick={() => setShowPastResults(!showPastResults)}
+              className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              <BarChart3 className="w-5 h-5" />
+              <span>Past Results</span>
+            </button>
           </div>
         </div>
 
@@ -214,6 +222,45 @@ const TeacherDashboard: React.FC = () => {
             {/* Current Poll Results */}
             {currentPoll && (
               <PollResults />
+            )}
+
+            {/* Past Results */}
+            {showPastResults && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <h3 className="text-lg font-semibold mb-4">Past Poll Results</h3>
+                {pollResults.length === 0 ? (
+                  <p className="text-gray-500">No past polls found.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {pollResults.map((result) => (
+                      <div key={result.pollId} className="border border-gray-200 rounded-lg p-4">
+                        <h4 className="font-semibold mb-2">{result.question}</h4>
+                        <div className="text-sm text-gray-600 mb-2">
+                          {new Date(result.createdAt).toLocaleString()} | {result.totalVotes} votes
+                        </div>
+                        <div className="space-y-2">
+                          {result.options.map((option) => {
+                            const votes = result.votes[option] || 0;
+                            const percentage = result.totalVotes > 0 ? (votes / result.totalVotes) * 100 : 0;
+                            return (
+                              <div key={option} className="flex items-center space-x-2">
+                                <span className="w-24 text-sm">{option}</span>
+                                <div className="flex-1 bg-gray-200 rounded-full h-4">
+                                  <div
+                                    className="bg-blue-600 h-4 rounded-full"
+                                    style={{ width: `${percentage}%` }}
+                                  />
+                                </div>
+                                <span className="text-sm font-medium">{votes}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
